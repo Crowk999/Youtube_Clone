@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sign In{% endblock %}
+
+{%block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>Sign In to YouTube Clone</h1>
+        </div>
+
+        <form action="auth_form" method="post">
+        {% csrf_token %}
+
+    </div>
+
+{% endblock %}
