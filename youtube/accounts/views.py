@@ -1,14 +1,13 @@
 from django.shortcuts import redirect
 from django.contrib.auth import login
 from django.views.generic import CreateView
-from django.urls import reverse_lazy
+from django.contrib import messages
 from .forms import CustomUserCreationForm
 
 # Create your views here.
 
 class RegisterView(CreateView):
     form_class = CustomUserCreationForm
-    success_url = reverse_lazy("accounts:login")
     template_name = "accounts/register.html"
     
     def dispatch(self, request, *args, **kwargs):
@@ -17,6 +16,7 @@ class RegisterView(CreateView):
         return super().dispatch(request, *args, **kwargs)
     
     def form_valid(self, form):
-        response = super().form_valid(form)
-        login(self.request, self.object)
+        user = form.save()
+        login(self.request, user)
+        messages.success(self.request, (f"Welcome, {user.username}!"))
         return redirect("/")
