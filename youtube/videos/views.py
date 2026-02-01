@@ -63,3 +63,10 @@ def video_upload(request):
             errors.append(f"{field}: {error}" if field != "__all__" else error)
 
     return JsonResponse({"scuess": False, "errors": ";".join(errors)})
+
+
+
+def video_upload_page(request):
+    return render(request, template_name="videos/upload.html", context={
+        "form" : VideoUploadForm()
+    })

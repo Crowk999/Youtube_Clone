@@ -3,6 +3,7 @@ from . import views
 
 app_name = "videos"
 
-urls = [
-    path()
+urlpatterns = [
+    path("upload/", views.video_upload_page, name ="upload"),
+    path("upload/submit/", views.video_upload, name= "upload_sumbit")
 ]

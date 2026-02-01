@@ -2,27 +2,32 @@ from django import forms
 
 class VideoUploadForm(forms.Form):
 
-    title = forms.CharField(max_length= 100,
-                            widget= forms.TextInput(
-                                    attrs= {
-                                        "class" : "forms.input",
-                                        "placeholder" : "Enter Your Video Tittle"} )
+    tittle = forms.CharField(max_length=100,
+                             widget=forms.TextInput(
+                                 attrs={
+                                     "class": "form-input",
+                                     "placeholder": "Enter Your Video Tittle"
+                                 }
+                             )
     )
 
-    description = forms.CharField(required= False, max_length= 500,
-                                  widget = forms.TextArea(
+    description = forms.CharField(required=False, max_length=500,
+                                  widget=forms.Textarea(
                                       attrs={
-                                          "class" : "forms.input",
-                                          "palceholder" : "Enter Your Video Description",
-                                          "rows" : 4} )
+                                          "class": "form-input",
+                                          "placeholder": "Enter Your Video Description",
+                                          "rows": 4
+                                      }
+                                  )
     )
 
     video_file = forms.FileField(
-        widget= forms.FileInput(
+        widget=forms.FileInput(
             attrs={
-                "class" : "form-input",
-                "accept" : "videos/*"
-            })
+                "class": "form-input",
+                "accept": "video/*"
+            }
+        )
     )
 
     def clean_video_file(self):
