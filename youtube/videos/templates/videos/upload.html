@@ -81,6 +81,60 @@
 
 {% block extra_js %}
 <script>
+    const $ = id => document.getElementById(id);
+    $("id_video_file").onchange = e => {
+        const file = e.target.files[0]
+        $("video-label").textContent = file ? `${file.name}`: "Click to select a video file"
+    }
+
+    $("customThumbnail").onchange = e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const render = new FileReader()
+        render.onload = ev =>{
+            $("thumbPreview").src = ev.target.result
+            $("thumbPreview").classList.add("visible")
+            $("thumb-label").style.display = "none"
+            $("thumbPreview").value = ev.target.result;
+        }
+        render.readAsDataURL(file)
+    }
+
+    $("uploadForm").onsubmit = async e => {
+        e.preventDefault()
+
+        if (!$("id_video_file").files.length || !$("id_tittle").value.trim()) {
+            alert("Please provide all required fields.")
+            return
+        }
+
+        $("uploadOverlay").classList.add("active");
+        $("submitBtn").disabled = true;
+        $("errorContainer").innerHTML = "";
+        window.onbeforeunload = () => "Uploading in progress, please don't close the page.";
+
+        try {
+            const res = await fetch("{% url 'videos:upload' %}", {
+                method: "POST",
+                body: new FormData($("uploadForm"))
+            });
+            const data = await res.json()
+            window.onbeforeunload = null;
+
+            if (data.success){
+                $("uploadOverlay").textContent = "Upload Complete"
+                setTimeout(() => location.href ='/', 500)
+            } else {
+                throw new Error(data.error)
+            }
+        } catch (err) {
+            window.onbeforeunload = null;
+            $("uploadOverlay").classList.remove("active")
+            $("submitBtn").disabled = false;
+            $("errorContainer").innerHTML = `<ul class="error-list"><li>${err.message || "An error occurred during upload."}</li></ul>`
+        }
+    }
+
 
 </script>
 {%  endblock %}

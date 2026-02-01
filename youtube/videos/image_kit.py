@@ -1,19 +1,23 @@
 import os
 from imagekitio import ImageKit
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def get_imagekit():
-    return ImageKit()
+    return ImageKit(
+        private_key=os.environ.get("IMAGEKIT_PRIVATE_KEY"),
+        public_key=os.environ.get("IMAGEKIT_PUBLIC_KEY"),
+        url_endpoint=os.environ.get("IMAGEKIT_URL_ENDPOINT")
+    )
 
 def upload_video(file_data: bytes, file_name: str, folder: str= "videos") -> dict:
-    public_key = os.environ.get("IMAGEKIT_PUBLIC_KEY")
-
     client = get_imagekit()
 
     response = client.files.upload(
-        file_data = file_data,
+        file = file_data,
         file_name = file_name,
-        folder = folder,
-        public_key = public_key
+        folder = folder
     )
 
     return {
@@ -23,7 +27,6 @@ def upload_video(file_data: bytes, file_name: str, folder: str= "videos") -> dic
 
 def upload_thumbnail(file_data: bytes, file_name: str, folder: str= "thumbnail") -> dict:
     import base64
-    public_key = os.environ.get("IMAGEKIT_PUBLIC_KEY")
 
     if file_data.startswith("data:"):
         base64_data = file_data.split("," ,1)[1]
@@ -36,8 +39,7 @@ def upload_thumbnail(file_data: bytes, file_name: str, folder: str= "thumbnail")
     response = client.files.upload(
         file = image_bytes,
         file_name = file_name,
-        folder = folder,
-        public_key = public_key
+        folder = folder
     )
 
     return {
