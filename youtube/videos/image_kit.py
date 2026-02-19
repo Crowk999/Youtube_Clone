@@ -6,9 +6,7 @@ load_dotenv()
 
 def get_imagekit():
     return ImageKit(
-        private_key=os.environ.get("IMAGEKIT_PRIVATE_KEY"),
-        public_key=os.environ.get("IMAGEKIT_PUBLIC_KEY"),
-        url_endpoint=os.environ.get("IMAGEKIT_URL_ENDPOINT")
+        private_key=os.environ.get("IMAGEKIT_PRIVATE_KEY")
     )
 
 def upload_video(file_data: bytes, file_name: str, folder: str= "videos") -> dict:
@@ -25,7 +23,7 @@ def upload_video(file_data: bytes, file_name: str, folder: str= "videos") -> dic
         "url" : response.url
     }
 
-def upload_thumbnail(file_data: bytes, file_name: str, folder: str= "thumbnail") -> dict:
+def upload_thumbnail(file_data: str, file_name: str, folder: str= "thumbnail") -> dict:
     import base64
 
     if file_data.startswith("data:"):

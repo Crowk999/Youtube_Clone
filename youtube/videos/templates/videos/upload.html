@@ -1,4 +1,4 @@
-{%  extends 'base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block title %} Upload Video {% endblock %}
@@ -11,7 +11,7 @@
 {% block content %}
 <div class="upload-overlay" id="uploadOverlay">
     <div class="upload-progress-container">
-        <div  class="upload-spinner">
+        <div class="upload-spinner">
             <h2>Uploading Video....</h2>
             <p class="upload-warning"> Please don't close this page </p>
         </div>
@@ -24,31 +24,31 @@
         <form id="uploadForm" method="post" enctype="multipart/form-data" class="upload-form">
             {% csrf_token %}
             <div id="errorContainer">
-                        {% if form.errors %}
-                            <ul class="error-list">
-                                {% for field in form %}
-                                    {% for error in field.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                {% endfor %}
+                {% if form.errors %}
+                <ul class="error-list">
+                    {% for field in form %}
+                    {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                    {% endfor %}
 
-                                {% for error in form.non_field_errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
+                    {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
             </div>
 
             <div class="form-group">
                 <label for="id_tittle"> Tittle </label>
-                <input type="text" name="tittle" id="id_tittle" class="form-input" 
-                placeholder="Enter video tittle" value="{{ form.tittle.value|default:'' }}" required>
+                <input type="text" name="tittle" id="id_tittle" class="form-input" placeholder="Enter video tittle"
+                    value="{{ form.tittle.value|default:'' }}" required>
             </div>
 
             <div class="form-group">
                 <label for="id_description"> Description </label>
-                <textarea name="description" id="id_description" class="form-input" 
-                placeholder="Enter video description" rows="3" required>{{form.description.value | default:''}}
+                <textarea name="description" id="id_description" class="form-input"
+                    placeholder="Enter video description" rows="3" required>{{form.description.value | default:''}}
                 </textarea>
             </div>
 
@@ -57,8 +57,9 @@
                 <label for="id_video_file" class="file-input-wrapper">
                     <span id="video-label"> Click to select a video file </span>
                 </label>
-                <input type="file" name="video_file" id="id_video_file" accept="video/*" required style="display: none;">
-                <span class="help-text"> MP$, WebM, MOV, AVI, Max:100MB </span>
+                <input type="file" name="video_file" id="id_video_file" accept="video/*" required
+                    style="display: none;">
+                <span class="help-text"> MP4, WebM, MOV, AVI, Max:100MB </span>
             </div>
 
             <div class="form-group">
@@ -84,18 +85,18 @@
     const $ = id => document.getElementById(id);
     $("id_video_file").onchange = e => {
         const file = e.target.files[0]
-        $("video-label").textContent = file ? `${file.name}`: "Click to select a video file"
+        $("video-label").textContent = file ? `${file.name}` : "Click to select a video file"
     }
 
     $("customThumbnail").onchange = e => {
         const file = e.target.files[0];
         if (!file) return;
         const render = new FileReader()
-        render.onload = ev =>{
+        render.onload = ev => {
             $("thumbPreview").src = ev.target.result
             $("thumbPreview").classList.add("visible")
             $("thumb-label").style.display = "none"
-            $("thumbPreview").value = ev.target.result;
+            $("ThumbnailData").value = ev.target.result;
         }
         render.readAsDataURL(file)
     }
@@ -114,16 +115,16 @@
         window.onbeforeunload = () => "Uploading in progress, please don't close the page.";
 
         try {
-            const res = await fetch("{% url 'videos:upload' %}", {
+            const res = await fetch("{% url 'videos:upload_submit' %}", {
                 method: "POST",
                 body: new FormData($("uploadForm"))
             });
             const data = await res.json()
             window.onbeforeunload = null;
 
-            if (data.success){
+            if (data.success) {
                 $("uploadOverlay").textContent = "Upload Complete"
-                setTimeout(() => location.href ='/', 500)
+                setTimeout(() => location.href = '/', 500)
             } else {
                 throw new Error(data.error)
             }
@@ -137,4 +138,4 @@
 
 
 </script>
-{%  endblock %}
+{% endblock %}

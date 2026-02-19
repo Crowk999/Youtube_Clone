@@ -62,7 +62,7 @@ def video_upload(request):
         for error in field_error:
             errors.append(f"{field}: {error}" if field != "__all__" else error)
 
-    return JsonResponse({"scuess": False, "errors": ";".join(errors)})
+    return JsonResponse({"success": False, "errors": ";".join(errors)})
 
 
 
